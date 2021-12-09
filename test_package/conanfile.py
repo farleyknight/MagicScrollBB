@@ -5,7 +5,7 @@ from conans import ConanFile, CMake, tools
 class MagicScrollBBTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake", "cmake_find_package", "cmake_paths"
-    requires = "MagicScrollBB/0.1"
+    requires = "MagicScrollBB/0.2"
 
     def build(self):
         cmake = CMake(self)
@@ -25,4 +25,4 @@ class MagicScrollBBTestConan(ConanFile):
             self.run(".%sexample" % os.sep)
 
     def package_info(self):
-        self.cpp_info.libs = ["MagicScrollBB/0.1"]
+        self.cpp_info.libs = ["MagicScrollBB/0.2"]

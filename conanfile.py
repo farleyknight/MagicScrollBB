@@ -2,7 +2,7 @@ from conans import ConanFile, CMake
 
 class MagicScrollBBConan(ConanFile):
     name = "MagicScrollBB"
-    version = "0.1"
+    version = "0.2"
     license = "MIT"
     author = "Farley Knight farleyknight@gmail.com"
     url = "http://github.com/farleyknight/MagicScrollBB"
@@ -29,7 +29,7 @@ class MagicScrollBBConan(ConanFile):
         # self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
-        self.copy("*.h", dst="include", src="src")
+        self.copy("*.hpp", dst="include", src="src")
         self.copy("*.lib", dst="lib", keep_path=False)
         self.copy("*.dll", dst="bin", keep_path=False)
         self.copy("*.dylib*", dst="lib", keep_path=False)
