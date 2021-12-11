@@ -12,30 +12,38 @@ Hand-crafted C++ version of `java.nio.ByteBuffer`.
 
 using ByteBuffer = MagicScrollBB;
 
+enum Color : std::int32_t {
+  RED = 1,
+  BLUE = 2,
+  GREEN = 3
+};
+
 int main() {
   auto buffer = ByteBuffer(1024);
-  // Use `write` methods to write primitive data types, such as
-  // - Various flavors of `int(8|16|32|64)_t`
-  // - `std::string` (using int32 length prefix)
-  // - `write_enum<EnumT>` for some given type `EnumT`
-  buffer.write_string("Hello, world!");
-  
-  // Note that the above could have been done using the "absolute" 
-  // version of `write_string`:
-  //
-  // > buffer.write_string(0, "Hello, world");
 
-  // To read back our two values, let's reset the cursor
+  // Write some data
+  buffer.write_string("Hello, world!");
+  buffer.write_int(42);
+  buffer.write_long(2147483647);
+  buffer.write_enum<Color>(BLUE);
+
+  // Reset the internal cursor
   buffer.reset_cursor();
 
-  // The relative versions use an internal `Cursor` object to keep
-  // track of where the offset should be at, after doing a read/write
-  // of a data type.
-  auto string_value = buffer.read_string();
-  fmt::print("The string == {}\n", value);
-  
-  auto int_value = buffer.read_int();
-  fmt::print("The integer == {}\n", value);
+  // Read it back
+  fmt::print("The string == {}\n",
+             buffer.read_string());
+  fmt::print("The int == {}\n",
+             buffer.read_int());
+  fmt::print("The long == {}\n",
+             buffer.read_long());
+  fmt::print("The enum == {}\n",
+             buffer.read_enum<Color>());
+
+  // One nice convenience method:
+  auto string_buffer = ByteBuffer::from_string("foobar");
+  fmt::print("string_buffer has content: {}\n",
+             string_buffer.read_string());
 }
 ```
 
@@ -43,8 +51,8 @@ int main() {
 
 Supports the following primitive types
 * bool
-* int (alias for `int32`)
-* long (alias for `int64`) [TODO]
+* Variables `int` sizes (8, 16, 32, 64)
+  - `read/write_int` is alias for `read/write_int32`
 * string (alias for `string32`
   - `string32`is a character array prefixed with int32 as the array size
 * Other `ByteBuffer` objects

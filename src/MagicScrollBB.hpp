@@ -5,8 +5,7 @@
 #include <string>
 #include <vector>
 
-// TODO: Generate documentation
-//
+#include <magic_enum.hpp>
 
 /*
  * NOTE: Just like javax.nio.ByteBuffer, we have absolute & relative versions of all of the data types provided:
@@ -340,6 +339,39 @@ public:
   }
 
   /*
+   * absolute read/write_long
+   */
+
+  long
+  read_long(buffer_offset_t offset) const noexcept {
+    // TODO: Take care of endian-ness here!
+    return *reinterpret_cast<const long*>(const_ptr(offset));
+  }
+
+  void
+  write_long(buffer_offset_t offset, long n) noexcept {
+    // TODO: Take care of endian-ness here!
+    *reinterpret_cast<int64_t*>(ptr(offset)) = n;
+  }
+
+  /*
+   * relative read/write_long
+   */
+
+  long
+  read_long() noexcept {
+    auto value = read_long(cursor_.offset());
+    cursor_.forward(sizeof(value));
+    return value;
+  }
+
+  void
+  write_long(long n) noexcept {
+    write_long(cursor_.offset(), n);
+    cursor_.forward(sizeof(n));
+  }
+
+  /*
    * absolute read/write_uint64
    */
 
@@ -464,7 +496,8 @@ public:
   }
 
   /*
-   * absolute read/write_enum<EnumT>
+   * absolute `read/write_enum<EnumT>`
+   * also include absolute `read_enum_as_string`
    */
 
   template<typename EnumT>
@@ -474,13 +507,20 @@ public:
   }
 
   template<typename EnumT>
+  const std::string
+  read_enum_as_string(buffer_offset_t offset) const noexcept {
+    return std::string(magic_enum::enum_name(read_enum<EnumT>(offset)));
+  }
+
+  template<typename EnumT>
   void
   write_enum(buffer_offset_t offset, EnumT value) noexcept {
     *reinterpret_cast<EnumT*>(ptr(offset)) = value;
   }
 
   /*
-   * relative read/write_enum<EnumT>
+   * relative `read/write_enum<EnumT>`
+   * also include relative `read_enum_as_string`
    */
 
   template<typename EnumT>
@@ -489,6 +529,12 @@ public:
     auto value = read_enum<EnumT>(cursor_.offset());
     cursor_.forward(sizeof(value));
     return value;
+  }
+
+  template<typename EnumT>
+  const std::string
+  read_enum_as_string() noexcept {
+    return std::string(magic_enum::enum_name(read_enum<EnumT>()));
   }
 
   template<typename EnumT>
@@ -503,15 +549,6 @@ public:
    */
 
   void
-  write_buffer(buffer_offset_t offset,
-               MagicScrollBB const& buffer) noexcept
-  {
-    std::memcpy(ptr(offset),
-                buffer.char_ptr(),
-                buffer.size());
-  }
-
-  void
   read_buffer(buffer_offset_t offset,
               MagicScrollBB& buffer) const noexcept
   {
@@ -520,21 +557,30 @@ public:
                 buffer.size());
   }
 
+  void
+  write_buffer(buffer_offset_t offset,
+               MagicScrollBB const& buffer) noexcept
+  {
+    std::memcpy(ptr(offset),
+                buffer.char_ptr(),
+                buffer.size());
+  }
+
   /*
    * relative read/write_buffer
    */
 
   void
-  write_buffer(MagicScrollBB const& buffer) noexcept
+  read_buffer(MagicScrollBB& buffer) noexcept
   {
-    write_buffer(cursor_.offset(), buffer);
+    read_buffer(cursor_.offset(), buffer);
     cursor_.forward(buffer.size());
   }
 
   void
-  read_buffer(MagicScrollBB& buffer) noexcept
+  write_buffer(MagicScrollBB const& buffer) noexcept
   {
-    read_buffer(cursor_.offset(), buffer);
+    write_buffer(cursor_.offset(), buffer);
     cursor_.forward(buffer.size());
   }
 
@@ -654,8 +700,14 @@ public:
   datetime_t
   read_datetime() noexcept {
     auto value = read_datetime(cursor_.offset());
-
+    cursor_.forward(sizeof(value));
     return value;
+  }
+
+  void
+  write_datetime(datetime_t d) noexcept {
+    write_datetime(cursor_.offset(), d);
+    cursor_.forward(sizeof(d));
   }
 
   /*
@@ -726,6 +778,21 @@ public:
   bool
   operator!=(const MagicScrollBB& other) const noexcept {
     return data_ != other.as_bytes();
+  }
+
+  /*
+   * static method MagicScrollBB::from_strinng()
+   *
+   * Creates a new MagicScrollBB from the given string.
+   */
+
+  static const MagicScrollBB
+  from_string(const std::string value) noexcept {
+    auto size = sizeof(int32_t) + value.size();
+    auto string_buffer = MagicScrollBB(size);
+    string_buffer.write_string(value);
+    string_buffer.reset_cursor();
+    return string_buffer;
   }
 
 private:

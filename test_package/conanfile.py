@@ -2,10 +2,12 @@ import os
 
 from conans import ConanFile, CMake, tools
 
+VERSION = open("../VERSION").read()
+
 class MagicScrollBBTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake", "cmake_find_package", "cmake_paths"
-    requires = "MagicScrollBB/0.2.1", "fmt/8.0.1"
+    requires = f"MagicScrollBB/{VERSION}", "fmt/8.0.1"
 
     def build(self):
         cmake = CMake(self)
@@ -25,4 +27,10 @@ class MagicScrollBBTestConan(ConanFile):
             self.run(".%sexample" % os.sep)
 
     def package_info(self):
-        self.cpp_info.libs = ["MagicScrollBB/0.2.1"]
+        self.cpp_info.libs = [f"MagicScrollBB/{VERSION}"]
+
+    def validate(self):
+        tools.check_min_cppstd(self, "17")
+
+    def package_info(self):
+        self.cpp_info.cxxflags = ["-std=c++17"]

@@ -1,18 +1,27 @@
-from conans import ConanFile, CMake
+from conans import tools, ConanFile, CMake
 
 class MagicScrollBBConan(ConanFile):
     name = "MagicScrollBB"
-    version = "0.2.1"
+    version = open("VERSION").read()
     license = "MIT"
     author = "Farley Knight farleyknight@gmail.com"
     url = "http://github.com/farleyknight/MagicScrollBB"
     description = "BB = Byte Buffer -- Hand crafted C++ version of java.nio.ByteBuffer"
     topics = ("byte-buffer", "c++")
-    settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}
     generators = "cmake"
     exports_sources = "src/*"
+    requires = "magic_enum/0.7.3"
+
+    settings = {
+        "os": None,
+        "compiler": {"gcc": {"cppstd": ['17', '20']},
+                     "apple-clang": {"cppstd": ['17', '20']},
+                     "Visual Studio": {"cppstd": ['17', '20']}},
+        "arch": None,
+        "build_type": None
+    }
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -36,5 +45,8 @@ class MagicScrollBBConan(ConanFile):
         self.copy("*.so", dst="lib", keep_path=False)
         self.copy("*.a", dst="lib", keep_path=False)
 
+    def validate(self):
+        tools.check_min_cppstd(self, "17")
+
     def package_info(self):
-        self.cpp_info.libs = ["MagicScrollBB"]
+        self.cpp_info.cxxflags = ["-std=c++17"]

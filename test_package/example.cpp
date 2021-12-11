@@ -1,23 +1,38 @@
 #include <fmt/core.h>
-#include "MagicScrollBB.hpp"
+#include <MagicScrollBB.hpp>
 
 using ByteBuffer = MagicScrollBB;
 
-int
-main() {
+enum Color : std::int32_t {
+  RED = 1,
+  BLUE = 2,
+  GREEN = 3
+};
+
+int main() {
   auto buffer = ByteBuffer(1024);
 
   // Write some data
   buffer.write_string("Hello, world!");
   buffer.write_int(42);
+  buffer.write_long(2147483647);
+  buffer.write_enum<Color>(BLUE);
 
   // Reset the internal cursor
   buffer.reset_cursor();
 
   // Read it back
-  auto string_value = buffer.read_string();
-  fmt::print("The string == {}\n", string_value);
+  fmt::print("The string == {}\n",
+             buffer.read_string());
+  fmt::print("The int == {}\n",
+             buffer.read_int());
+  fmt::print("The long == {}\n",
+             buffer.read_long());
+  fmt::print("The enum == {}\n",
+             buffer.read_enum_as_string<Color>());
 
-  auto int_value = buffer.read_int();
-  fmt::print("The int == {}\n", int_value);
+  // One nice convenience method:
+  auto string_buffer = ByteBuffer::from_string("foobar");
+  fmt::print("string_buffer has content: {}\n",
+             string_buffer.read_string());
 }
