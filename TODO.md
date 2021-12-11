@@ -2,13 +2,11 @@
 
 ## (with versions)
 
-
-* Add support for:
-  - Absolute versus relative offsets via `MagicScrollBB::Cursor`.
-  - Version: 0.2.1
-
 * Add `long` as alias for `int64`
   - Version: 0.2.2
+  
+* Add `ByteBuffer::from_string(const std::string value)`
+  - Version: 0.2.3
 
 * Add support for little/big endian.
   - Version: 0.3.0
@@ -19,13 +17,22 @@
   - Version: 0.4.0
   - Use template programming to provide an interface where 
     - A client can use `&Object::member` syntax (same as `pybind11`)
-  - See `todo/CODECs.md` for some examples found on the internet that use member-pointers to do serialize / deserialize.
+  - See `todo/CODECs.md`
+    - Those examples on the internet that use member-pointers.
+    - Those examples make serialize / deserialize easy.
   
 ## (without versions)
 
 * Add some documentation.
+  - Document `read/write_enum<EnumT>`
+  - Put it in the `README.md`
+  
 * Add more examples.
+  - Maybe network packets?
+  - Best example is to just link to `KoboldLairSP`
+  
 * Add link to `KoboldLairSP`
+
 * Add more methods from `java.nio.ByteBuffer`
   * Buffer.compact
   * https://docs.oracle.com/javase/7/docs/api/java/nio/ByteBuffer.html#compact
