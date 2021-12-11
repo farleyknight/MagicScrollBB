@@ -2,7 +2,7 @@ from conans import ConanFile, CMake
 
 class MagicScrollBBConan(ConanFile):
     name = "MagicScrollBB"
-    version = "0.2"
+    version = "0.2.1"
     license = "MIT"
     author = "Farley Knight farleyknight@gmail.com"
     url = "http://github.com/farleyknight/MagicScrollBB"

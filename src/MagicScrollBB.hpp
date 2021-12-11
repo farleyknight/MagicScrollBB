@@ -137,14 +137,14 @@ public:
 
   bool
   read_bool() noexcept {
-    auto value = read_bool(cursor.offset());
+    auto value = read_bool(cursor_.offset());
     cursor_.forward(sizeof(value));
     return value;
   }
 
   void
   write_bool(bool b) {
-    write_bool(cursor.offset(), b);
+    write_bool(cursor_.offset(), b);
     cursor_.forward(sizeof(b));
   }
 
@@ -264,12 +264,12 @@ public:
    */
 
   int
-  read_int() const {
+  read_int() noexcept {
     return read_int32();
   }
 
   void
-  write_int(int n) {
+  write_int(int n) noexcept {
     write_int32(n);
   }
 
@@ -278,13 +278,13 @@ public:
    */
 
   uint32_t
-  read_uint32(buffer_offset_t offset) const {
+  read_uint32(buffer_offset_t offset) const noexcept {
     // TODO: Take care of endian-ness here!
     return *reinterpret_cast<const uint32_t*>(const_ptr(offset));
   }
 
   void
-  write_uint32(buffer_offset_t offset, uint32_t n) {
+  write_uint32(buffer_offset_t offset, uint32_t n) noexcept {
     // TODO: Take care of endian-ness here!
     *reinterpret_cast<uint32_t*>(ptr(offset)) = n;
   }
@@ -294,14 +294,14 @@ public:
    */
 
   uint32_t
-  read_uint32(buffer_offset_t offset) const {
+  read_uint32() noexcept {
     auto value = read_uint32(cursor_.offset());
     cursor_.forward(sizeof(value));
     return value;
   }
 
   void
-  write_uint32(uint32_t n) {
+  write_uint32(uint32_t n) noexcept {
     write_uint32(cursor_.offset(), n);
     cursor_.forward(sizeof(n));
   }
@@ -317,7 +317,7 @@ public:
   }
 
   void
-  write_int64(buffer_offset_t offset, int64_t n) {
+  write_int64(buffer_offset_t offset, int64_t n) noexcept {
     // TODO: Take care of endian-ness here!
     *reinterpret_cast<int64_t*>(ptr(offset)) = n;
   }
@@ -358,14 +358,14 @@ public:
    */
 
   int64_t
-  read_uint64(buffer_offset_t offset) noexcept {
+  read_uint64() noexcept {
     auto value = read_uint64(cursor_.offset());
     cursor_.forward(sizeof(value));
     return value;
   }
 
   void
-  write_uint64(buffer_offset_t offset, uint64_t n) {
+  write_uint64(uint64_t n) {
     write_uint64(cursor_.offset(), n);
     cursor_.forward(sizeof(n));
   }
@@ -485,7 +485,7 @@ public:
 
   template<typename EnumT>
   EnumT
-  read_enum() const noexcept {
+  read_enum() noexcept {
     auto value = read_enum<EnumT>(cursor_.offset());
     cursor_.forward(sizeof(value));
     return value;
@@ -532,7 +532,7 @@ public:
   }
 
   void
-  read_buffer(MagicScrollBB& buffer) const noexcept
+  read_buffer(MagicScrollBB& buffer) noexcept
   {
     read_buffer(cursor_.offset(), buffer);
     cursor_.forward(buffer.size());
