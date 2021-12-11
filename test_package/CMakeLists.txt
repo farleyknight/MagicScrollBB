@@ -12,7 +12,7 @@ find_package("fmt")
 
 add_executable(example example.cpp)
 
-target_compile_features(example PUBLIC cxx_std_11)
+target_compile_features(example PUBLIC cxx_std_17)
 target_include_directories(example PRIVATE ${CONAN_INCLUDE_DIRS})
 target_link_libraries(example
   ${fmt_LIBS})

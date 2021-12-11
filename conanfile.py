@@ -1,8 +1,9 @@
 from conans import tools, ConanFile, CMake
+from conans.tools import load
 
 class MagicScrollBBConan(ConanFile):
     name = "MagicScrollBB"
-    version = open("VERSION").read()
+    version = "0.2.4"
     license = "MIT"
     author = "Farley Knight farleyknight@gmail.com"
     url = "http://github.com/farleyknight/MagicScrollBB"

@@ -2,7 +2,7 @@ import os
 
 from conans import ConanFile, CMake, tools
 
-VERSION = open("../VERSION").read()
+VERSION = "0.2.4"
 
 class MagicScrollBBTestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
