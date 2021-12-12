@@ -1,6 +1,10 @@
 
 ## Simple Use 
 
+* NOTE: The "Codec" version of MagicScrollBB will not happen here.
+  - Instead it will be a separate project called `PolymorphSpellCE`
+  - If I ever decide I need Codec support, it should go into that project.
+
 ```c++
 #include <iostream>
 using namespace std;

@@ -790,8 +790,7 @@ public:
   from_string(const std::string value) noexcept {
     auto size = sizeof(int32_t) + value.size();
     auto string_buffer = MagicScrollBB(size);
-    string_buffer.write_string(value);
-    string_buffer.reset_cursor();
+    string_buffer.write_string(0, value);
     return string_buffer;
   }
 

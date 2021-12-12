@@ -38,12 +38,12 @@ int main() {
   fmt::print("The long == {}\n",
              buffer.read_long());
   fmt::print("The enum == {}\n",
-             buffer.read_enum<Color>());
+             buffer.read_enum_as_string<Color>());
 
   // One nice convenience method:
   auto string_buffer = ByteBuffer::from_string("foobar");
   fmt::print("string_buffer has content: {}\n",
-             string_buffer.read_string());
+             string_buffer.read_string(0));
 }
 ```
 

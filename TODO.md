@@ -13,6 +13,8 @@
   - Pick a default (little or big)
     - Remove a bunch of places where I use `reinterpret_cast`
 
+## Codec Offshoot Project
+
 * Add Codec class based on "pointer to member" C++ semantics:
   - Version: 0.4.0
   - Use template programming to provide an interface where 
@@ -20,7 +22,19 @@
   - See `todo/CODECs.md`
     - Those examples on the internet that use member-pointers.
     - Those examples make serialize / deserialize easy.
-  
+    
+* NOTE: The "Codec" version of MagicScrollBB will not happen here.
+  - Instead it will be a separate project called `PolymorphSpellSD`
+    - SD = Serializer & Deserializer
+  - If I ever decide I need Codec support, it should go into that project.
+
+* NOTE: After deciding to move "Codec" to a new project...
+  - I think that the refactoring for endianness (removing `reinterpret_cast`)
+  - This can possibly be absorbed by `PolymorphSpellSD` 
+  - Why? Because serialization & deserialization is handled by `reinterpret_cast`
+    - They are related functions
+    - Make `MagicScrollBB` depend on functions in `PolymorphSpellSD`
+
 ## (without versions)
 
 * Add some documentation.

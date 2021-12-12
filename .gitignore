@@ -59,5 +59,4 @@ package/
 bin
 
 # conan test package
-test_package/FindMagicScrollBB.cmake
 test_package/conan_paths.cmake

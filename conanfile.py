@@ -1,5 +1,4 @@
 from conans import tools, ConanFile, CMake
-from conans.tools import load
 
 class MagicScrollBBConan(ConanFile):
     name = "MagicScrollBB"
